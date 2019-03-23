@@ -13,7 +13,7 @@ public class QueueMessageSenderImpl implements QueueMessageSender {
 	}
 
 	@Override
-	public void publish(byte[] message) {
+	public void publish(String queueName, byte[] message) {
 		// TODO Auto-generated method stub
 		
 	}

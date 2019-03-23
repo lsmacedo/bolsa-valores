@@ -6,10 +6,22 @@ package queue;
 //import com.rabbitmq.client.DeliverCallback;
 
 public class QueueMessageReceiverImpl implements QueueMessageReceiver {
+	
+	private QueueMessageCallback callback;
 
 	@Override
 	public void config(String host, QueueMessageCallback callback) {
-		callback.onMessage("Oi!!!".getBytes());
+		this.callback = callback;
+	}
+	
+	@Override
+	public synchronized void listen(String queueName) {
+		while (true) {
+			try {
+				wait(2000);
+				callback.onMessage("Oi!!!".getBytes());
+			} catch (Exception e) { System.err.println(e.getMessage()) ;}
+		}
 	}
 
 }
