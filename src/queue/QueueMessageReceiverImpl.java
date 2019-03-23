@@ -18,8 +18,8 @@ public class QueueMessageReceiverImpl implements QueueMessageReceiver {
 	public synchronized void listen(String queueName) {
 		while (true) {
 			try {
-				wait(2000);
 				callback.onMessage("Oi!!!".getBytes());
+				wait(2000);
 			} catch (Exception e) { System.err.println(e.getMessage()) ;}
 		}
 	}

@@ -28,7 +28,7 @@ public class MainApplication {
 		queueSender.publish(queues[0], "Oi!!!".getBytes());
 	}
 	
-	public static QueueMessageCallback messageHandler() {
+	private static QueueMessageCallback messageHandler() {
 		return new QueueMessageCallback() {
 
 			@Override
