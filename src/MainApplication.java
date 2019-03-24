@@ -4,8 +4,9 @@ import queue.*;
 
 public class MainApplication {
 	
-    public static final String    HOST        = "localhost"; 
-    private static final String[] QUEUE_NAMES = new String[] { "Fila 1", "Fila 2", "Fila 3" };
+    public static final  String   HOST   = "localhost"; 
+    public static final  String   QUEUE  = "LUCAS-PC";
+    private static final String[] TOPICS = new String[] { "TP1", "TP2" };
 
     /**
      * @param args
@@ -15,8 +16,9 @@ public class MainApplication {
         QueueMessageReceiver queueReceiver = new QueueMessageReceiverImpl();
         queueReceiver.config(HOST, messageHandler());
         
-        /* Ouvindo em todas as filas */
-        for (String queueName : QUEUE_NAMES) { queueReceiver.listen(queueName); }
+        /* Inscrevendo em todos os tópicos */
+        queueReceiver.listen(QUEUE);
+        for (String topicName : TOPICS) { queueReceiver.subscribe(topicName); }
 
         /* Inicializando Sender */
         QueueMessageSender queueSender = new QueueMessageSenderImpl();
@@ -40,11 +42,11 @@ public class MainApplication {
         return (String queueName, byte[] message) -> {
             try {
                 String text = new String(message, "UTF-8");
-                System.out.println("----------\nMensagem recebida em " + queueName + ": " + text);
+                System.out.println("\n----------\nMensagem recebida em " + queueName + ": " + text);
                 BolsaValores bolsaValores = BolsaValores.getInstance();
-                synchronized (bolsaValores) {
-                    bolsaValores.notify();
-                }
+//                synchronized (bolsaValores) {
+//                    bolsaValores.notify();
+//                }
             } catch (UnsupportedEncodingException e) {}
         };
     }

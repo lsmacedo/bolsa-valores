@@ -17,7 +17,7 @@ public interface QueueMessageSender {
      * @param queueName
      * @param message 
      */
-    public void publish(String queueName, byte[] message) throws QueueMessageSendingException;
+    public void publish(String queueName, String topicName, byte[] message) throws QueueMessageSendingException;
     
     /**
      * Encerra a conexão

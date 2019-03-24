@@ -39,22 +39,22 @@ public class BolsaValores {
      */
     public synchronized void getInputFromUser() {
         String  message;
-        String  queue;
+        String  topic;
         Scanner scanner = new Scanner(System.in);
         
         try {
             do {
-                System.out.println("----------");
-                System.out.print("Informe uma fila: ");
-                queue = scanner.nextLine();
+                System.out.println("\n----------");
+                System.out.print("Informe um tópico: ");
+                topic = scanner.nextLine();
                 System.out.print("Informe uma mensagem: ");
                 message = scanner.nextLine();
-                queueSender.publish(queue, message.getBytes());
-                this.wait(2000); // Aguardando 2 segundos ou até mensagem ser recebida
+                queueSender.publish(MainApplication.QUEUE, topic, message.getBytes());
+//                this.wait(2000); // Aguardando 2 segundos ou até mensagem ser recebida
             }
             while (!"Tchau".toLowerCase().equals(message.toLowerCase()));
         } 
-        catch (InterruptedException e) { }
+//        catch (InterruptedException e) { }/
         catch (QueueMessageSendingException e) { 
             System.err.println("Infelizmente, não foi possível enviar a sua mensagem :(");
         }

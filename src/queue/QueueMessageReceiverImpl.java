@@ -6,15 +6,18 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
 import exception.QueueInitializationException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 public class QueueMessageReceiverImpl implements QueueMessageReceiver {
 	
     private QueueMessageCallback callback;
-    private ConnectionFactory    factory = new ConnectionFactory();
+    private ConnectionFactory    factory         = new ConnectionFactory();
     private Connection           connection;
     private Channel              channel;
     private String               consumerTag;
+    private List<String>         connectedQueues = new ArrayList<String>();
 
     @Override
     public void config(String host, QueueMessageCallback callback) throws QueueInitializationException {
@@ -25,9 +28,30 @@ public class QueueMessageReceiverImpl implements QueueMessageReceiver {
             connection = factory.newConnection();
             channel = connection.createChannel();
             
-            System.out.println("A conexão com a fila foi estabelecida com sucesso. Aguardando mensagens...");
+            System.out.println("A conexão com o host foi estabelecida com sucesso.");
         } catch (IOException | TimeoutException e) {
             throw new QueueInitializationException(e);
+        }
+    }
+
+    @Override
+    public void subscribe(String topicName) {
+        try {
+            channel.exchangeDeclare(topicName, "topic");
+            for (String queueName : connectedQueues) 
+                channel.queueBind(queueName, topicName, "");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @Override
+    public void unsubscribe(String topicName) {
+        try {
+            for (String queueName : connectedQueues) 
+                channel.queueUnbind(queueName, topicName, "");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -40,6 +64,8 @@ public class QueueMessageReceiverImpl implements QueueMessageReceiver {
                 callback.onMessage(queueName, message);
             };
             consumerTag = channel.basicConsume(queueName, true, deliverCallback, consumerTag -> { });
+            connectedQueues.add(queueName);
+            System.out.println("Aguardando mensagens em " + queueName + "...");
         } catch (IOException e) {
             throw new QueueInitializationException(e);
         }

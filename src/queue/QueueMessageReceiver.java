@@ -12,6 +12,18 @@ public interface QueueMessageReceiver {
      * @throws QueueInitializationException 
      */
     public void config(String host, QueueMessageCallback callback) throws QueueInitializationException;
+    
+    /**
+     * Inscreve receiver em um tópico
+     * @param topicName 
+     */
+    public void subscribe(String topicName);
+    
+    /**
+     * Cancela interesse de receiver em um tópico
+     * @param topicName 
+     */
+    public void unsubscribe(String topicName);
 	
     /**
      * Faz com que este receiver comece a ouvir na fila informada
