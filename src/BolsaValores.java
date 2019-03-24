@@ -5,24 +5,38 @@ import queue.QueueMessageSender;
 
 public class BolsaValores {
     
-    private final QueueMessageReceiver queueReceiver;
-    private final QueueMessageSender   queueSender;
-    private final String[]             queueNames;
+    private        QueueMessageSender queueSender;
+    private static BolsaValores       instance = new BolsaValores();
     
-    public BolsaValores(QueueMessageReceiver queueReceiver, QueueMessageSender queueSender, String[] queueNames) {
-        this.queueReceiver = queueReceiver;
-        this.queueSender   = queueSender;
-        this.queueNames    = queueNames;
+    private BolsaValores() {
+        
+    }
+        
+    public void setQueueMessageSender(QueueMessageSender queueSender) {
+        this.queueSender = queueSender;
     }
     
-    public void getInputFromUser() {
+    public static BolsaValores getInstance() {
+        return BolsaValores.instance;
+    }
+    
+    public synchronized void getInputFromUser() {
         String  message;
+        String  queue;
         Scanner scanner = new Scanner(System.in);
-        do {
-            message = scanner.nextLine();
-            queueSender.publish(queueNames[0], message.getBytes());
-        }
-        while (!"Tchau".toLowerCase().equals(message.toLowerCase()));
+        
+        try {
+            do {
+                System.out.println("----------");
+                System.out.print("Informe uma fila: ");
+                queue = scanner.nextLine();
+                System.out.print("Informe uma mensagem: ");
+                message = scanner.nextLine();
+                queueSender.publish(queue, message.getBytes());
+                this.wait(2000); // Aguardando 2 segundos ou até mensagem ser recebida
+            }
+            while (!"Tchau".toLowerCase().equals(message.toLowerCase()));
+        } catch (InterruptedException e) { }
     }
     
 }

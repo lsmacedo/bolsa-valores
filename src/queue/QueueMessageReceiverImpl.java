@@ -35,7 +35,7 @@ public class QueueMessageReceiverImpl implements QueueMessageReceiver {
             channel.queueDeclare(queueName, false, false, false, null);
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
                 byte[] message = delivery.getBody();
-                callback.onMessage(message);
+                callback.onMessage(queueName, message);
             };
             consumerTag = channel.basicConsume(queueName, true, deliverCallback, consumerTag -> { });
         } catch (IOException e) {

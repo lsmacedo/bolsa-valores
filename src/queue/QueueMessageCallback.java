@@ -2,6 +2,6 @@ package queue;
 
 public interface QueueMessageCallback {
 	
-    public void onMessage(byte[] message);
+    public void onMessage(String queueName, byte[] message);
 
 }

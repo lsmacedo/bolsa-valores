@@ -7,24 +7,27 @@ import queue.QueueMessageSenderImpl;
 
 public class MainApplication {
 	
-    public static final String    HOST       = "localhost"; 
-    private static final String[] queueNames = new String[] { "Fila 1", "Fila 2", "Fila 3" };
+    public static final String    HOST        = "localhost"; 
+    private static final String[] QUEUE_NAMES = new String[] { "Fila 1", "Fila 2", "Fila 3" };
 
     /**
      * @param args
      */
     public static void main(String[] args) {
-        /* Receiver */
+        /* Inicializando Receiver */
         QueueMessageReceiver queueReceiver = new QueueMessageReceiverImpl();
         queueReceiver.config(HOST, messageHandler());
-        queueReceiver.listen(queueNames[0]);
+        
+        /* Ouvindo em todas as filas */
+        for (String queueName : QUEUE_NAMES) { queueReceiver.listen(queueName); }
 
-        /* Sender */
+        /* Inicializando Sender */
         QueueMessageSender queueSender = new QueueMessageSenderImpl();
         queueSender.config(HOST);
         
-        /* Permitindo que usuário digite mensagens */
-        BolsaValores bolsaValores = new BolsaValores(queueReceiver, queueSender, queueNames);
+        /* Solicitando que usuário digite mensagens */
+        BolsaValores bolsaValores = BolsaValores.getInstance();
+        bolsaValores.setQueueMessageSender(queueSender);
         bolsaValores.getInputFromUser();
         
         /* Finalizando execução */
@@ -33,10 +36,14 @@ public class MainApplication {
     }
 	
     private static QueueMessageCallback messageHandler() {
-        return (byte[] message) -> {
+        return (String queueName, byte[] message) -> {
             try {
                 String text = new String(message, "UTF-8");
-                System.out.println("Mensagem recebida: " + text);
+                System.out.println("----------\nMensagem recebida em " + queueName + ": " + text);
+                BolsaValores bolsaValores = BolsaValores.getInstance();
+                synchronized (bolsaValores) {
+                    bolsaValores.notify();
+                }
             } catch (UnsupportedEncodingException e) {}
         };
     }
