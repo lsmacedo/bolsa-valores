@@ -1,9 +1,6 @@
+import exception.QueueInitializationException;
 import java.io.UnsupportedEncodingException;
-import queue.QueueMessageCallback;
-import queue.QueueMessageReceiver;
-import queue.QueueMessageReceiverImpl;
-import queue.QueueMessageSender;
-import queue.QueueMessageSenderImpl;
+import queue.*;
 
 public class MainApplication {
 	
@@ -13,7 +10,7 @@ public class MainApplication {
     /**
      * @param args
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws QueueInitializationException {
         /* Inicializando Receiver */
         QueueMessageReceiver queueReceiver = new QueueMessageReceiverImpl();
         queueReceiver.config(HOST, messageHandler());
@@ -35,6 +32,10 @@ public class MainApplication {
         System.exit(0);
     }
 	
+    /**
+     * Método que é chamado após uma nova mensagem ser recebida na fila
+     * @return 
+     */
     private static QueueMessageCallback messageHandler() {
         return (String queueName, byte[] message) -> {
             try {
