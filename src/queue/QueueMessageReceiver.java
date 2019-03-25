@@ -16,8 +16,9 @@ public interface QueueMessageReceiver {
     /**
      * Inscreve receiver em um tópico
      * @param topicName 
+     * @param bindingKey
      */
-    public void subscribe(String topicName);
+    public void subscribe(String topicName, String bindingKey);
     
     /**
      * Cancela interesse de receiver em um tópico

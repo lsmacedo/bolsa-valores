@@ -14,10 +14,11 @@ public interface QueueMessageSender {
 	
     /**
      * Envia uma mensagem na fila informada
-     * @param queueName
+     * @param topicName
+     * @param routingKey
      * @param message 
      */
-    public void publish(String queueName, String topicName, byte[] message) throws QueueMessageSendingException;
+    public void publish(String topicName, String routingKey, byte[] message) throws QueueMessageSendingException;
     
     /**
      * Encerra a conexão

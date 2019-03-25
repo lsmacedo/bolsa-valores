@@ -35,11 +35,11 @@ public class QueueMessageReceiverImpl implements QueueMessageReceiver {
     }
 
     @Override
-    public void subscribe(String topicName) {
+    public void subscribe(String topicName, String bindingKey) {
         try {
             channel.exchangeDeclare(topicName, "topic");
             for (String queueName : connectedQueues) 
-                channel.queueBind(queueName, topicName, "");
+                channel.queueBind(queueName, topicName, bindingKey);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -60,8 +60,9 @@ public class QueueMessageReceiverImpl implements QueueMessageReceiver {
         try {
             channel.queueDeclare(queueName, false, false, false, null);
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-                byte[] message = delivery.getBody();
-                callback.onMessage(queueName, message);
+                byte[] message    = delivery.getBody();
+                String routingKey = delivery.getEnvelope().getRoutingKey();
+                callback.onMessage(routingKey, message);
             };
             consumerTag = channel.basicConsume(queueName, true, deliverCallback, consumerTag -> { });
             connectedQueues.add(queueName);

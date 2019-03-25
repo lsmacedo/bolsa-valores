@@ -26,11 +26,10 @@ public class QueueMessageSenderImpl implements QueueMessageSender {
     }
 
     @Override
-    public void publish(String queueName, String topicName, byte[] message) throws QueueMessageSendingException {
+    public void publish(String topicName, String routingKey, byte[] message) throws QueueMessageSendingException {
         try {
-            channel.queueDeclare(queueName, false, false, false, null);
             channel.exchangeDeclare(topicName, "topic");
-            channel.basicPublish(topicName, "", null, message);
+            channel.basicPublish(topicName, routingKey, null, message);
         } catch (IOException e) {
             throw new QueueMessageSendingException(e);
         }
