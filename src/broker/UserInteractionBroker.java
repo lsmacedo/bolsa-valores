@@ -13,9 +13,9 @@ import util.InputController;
 
 public class UserInteractionBroker {
     
-    private        QueueMessageSender   queueSender;
-    private        QueueMessageReceiver queueReceiver;
-    private static UserInteractionBroker       instance = new UserInteractionBroker();
+    private        QueueMessageSender    queueSender;
+    private        QueueMessageReceiver  queueReceiver;
+    private static UserInteractionBroker instance = new UserInteractionBroker();
     
     /**
      * Construtor privado. Padrão Singleton
@@ -34,7 +34,7 @@ public class UserInteractionBroker {
     }
     
     /**
-     * Devolve a instância de BolsaValores
+     * Devolve a instância deste menu
      * @return 
      */
     public static UserInteractionBroker getInstance() {

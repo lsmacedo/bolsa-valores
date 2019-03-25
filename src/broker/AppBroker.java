@@ -49,7 +49,11 @@ public class AppBroker {
         return (String routingKey, byte[] message) -> {
             Operacao operation = Operacao.fromByteArray(message);
             if (operation != null) {
-                System.out.println("\n----------\nMensagem recebida em " + routingKey + ": " + operation.toString() + "\n----------\n");
+                System.out.println(
+                    "\n---------------\n"
+                    + "Operação recebida em " + routingKey + ": " + operation.toString()
+                    + "\n---------------\n"
+                );
                 UserInteractionBroker bolsaValores = UserInteractionBroker.getInstance();
             }
         };
