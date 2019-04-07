@@ -18,7 +18,7 @@ public interface QueueMessageSender {
      * @param routingKey
      * @param message 
      */
-    public void publish(String topicName, String routingKey, byte[] message) throws QueueMessageSendingException;
+    public void publish(String routingKey, byte[] message) throws QueueMessageSendingException;
     
     /**
      * Encerra a conexão

@@ -15,22 +15,20 @@ public interface QueueMessageReceiver {
     
     /**
      * Inscreve receiver em um tópico
-     * @param topicName 
      * @param bindingKey
      */
-    public void subscribe(String topicName, String bindingKey);
+    public void subscribe(String bindingKey);
     
     /**
      * Cancela interesse de receiver em um tópico
-     * @param topicName 
+     * @param bindingKey 
      */
-    public void unsubscribe(String topicName, String bindingKey);
+    public void unsubscribe(String bindingKey);
 	
     /**
-     * Faz com que este receiver comece a ouvir na fila informada
-     * @param queueName 
+     * Faz com que este receiver comece a ouvir
      */
-    public void listen(String queueName) throws QueueInitializationException;
+    public void listen() throws QueueInitializationException;
     
     /**
      * Encerra a conexão

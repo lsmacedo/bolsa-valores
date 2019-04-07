@@ -92,7 +92,7 @@ public class UserInteractionBroker {
         
         String routingKey = "compra." + shareName;
         Operacao operacao = new OperacaoCompra(quant, value, AppBroker.BROKER);
-        this.queueSender.publish(shareName, routingKey, operacao.toByteArray());
+        this.queueSender.publish(routingKey, operacao.toByteArray());
     }
     
     private void showSellMenu() throws InvalidShareNameException, InvalidValueException, QueueMessageSendingException {
@@ -105,25 +105,25 @@ public class UserInteractionBroker {
         
         String routingKey = "venda." + shareName;
         Operacao operacao = new OperacaoVenda(quant, value, AppBroker.BROKER);
-        this.queueSender.publish(shareName, routingKey, operacao.toByteArray());
+        this.queueSender.publish(routingKey, operacao.toByteArray());
     }
     
     private void showSubscribeMenu() throws InvalidShareNameException {
         String shareName = InputController.readLine("Informe uma ação para se inscrever:");
         if (!AppBroker.TOPICS.contains(shareName)) throw new InvalidShareNameException();
         
-        this.queueReceiver.subscribe(shareName, "compra.*");
-        this.queueReceiver.subscribe(shareName, "venda.*");
-        this.queueReceiver.subscribe(shareName, "transacao.*");
+        this.queueReceiver.subscribe("compra." + shareName);
+        this.queueReceiver.subscribe("venda." + shareName);
+        this.queueReceiver.subscribe("transacao." + shareName);
     }
     
     private void showUnsubscribeMenu() throws InvalidShareNameException {
         String shareName = InputController.readLine("Informe uma ação para se desinscrever:");
         if (!AppBroker.TOPICS.contains(shareName)) throw new InvalidShareNameException();
         
-        this.queueReceiver.unsubscribe(shareName, "compra.*");
-        this.queueReceiver.unsubscribe(shareName, "venda.*");
-        this.queueReceiver.unsubscribe(shareName, "transacao.*");
+        this.queueReceiver.unsubscribe("compra." + shareName);
+        this.queueReceiver.unsubscribe("venda." + shareName);
+        this.queueReceiver.unsubscribe("transacao." + shareName);
     }
     
 }

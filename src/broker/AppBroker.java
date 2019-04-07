@@ -25,9 +25,8 @@ public class AppBroker {
         /* Inicializando Receiver */
         QueueMessageReceiver queueReceiver = new QueueMessageReceiverImpl();
         queueReceiver.config(HOST, messageHandler());
-        queueReceiver.listen(HOST);
-        TOPICS.forEach((topic) -> queueReceiver.subscribe(topic, "transacao.*"));
-
+        queueReceiver.listen();
+        
         /* Inicializando Sender */
         QueueMessageSender queueSender = new QueueMessageSenderImpl();
         queueSender.config(HOST);

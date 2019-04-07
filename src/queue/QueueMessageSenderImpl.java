@@ -10,9 +10,10 @@ import java.util.concurrent.TimeoutException;
 
 public class QueueMessageSenderImpl implements QueueMessageSender {
     
-    private ConnectionFactory factory = new ConnectionFactory();
-    private Channel           channel;
-    private Connection        connection;
+    private ConnectionFactory   factory       = new ConnectionFactory();
+    private Channel             channel;
+    private Connection          connection;
+    private static final String EXCHANGE_NAME = "operacoes";
 
     @Override
     public void config(String host) throws QueueInitializationException {
@@ -26,10 +27,10 @@ public class QueueMessageSenderImpl implements QueueMessageSender {
     }
 
     @Override
-    public void publish(String topicName, String routingKey, byte[] message) throws QueueMessageSendingException {
+    public void publish(String routingKey, byte[] message) throws QueueMessageSendingException {
         try {
-            channel.exchangeDeclare(topicName, "topic");
-            channel.basicPublish(topicName, routingKey, null, message);
+            channel.exchangeDeclare(EXCHANGE_NAME, "topic");
+            channel.basicPublish(EXCHANGE_NAME, routingKey, null, message);
         } catch (IOException e) {
             throw new QueueMessageSendingException(e);
         }

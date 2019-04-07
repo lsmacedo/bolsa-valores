@@ -27,13 +27,11 @@ public class AppBolsa {
         /* Inicializando Receiver */
         queueReceiver = new QueueMessageReceiverImpl();
         queueReceiver.config(HOST, messageHandler());
-        queueReceiver.listen(HOST);
+        queueReceiver.listen();
         
-        TOPICS.forEach((topic) -> {
-            queueReceiver.subscribe(topic, "compra.*");
-            queueReceiver.subscribe(topic, "venda.*");
-            queueReceiver.subscribe(topic, "transacao.*");
-        });
+        queueReceiver.subscribe("compra.*");
+        queueReceiver.subscribe("venda.*");
+        queueReceiver.subscribe("transacao.*");
 
         /* Inicializando Sender */
         queueSender = new QueueMessageSenderImpl();
@@ -66,10 +64,6 @@ public class AppBolsa {
                             execTransaction(operacao, matchingOperation);
                         }
                         break;
-                    case "info":
-                        return;
-                    default:
-                        throw new Exception("Tipo inválido de operação");
                 }
             } catch (Exception ex) {
                 Logger.getLogger(AppBolsa.class.getName()).log(Level.SEVERE, null, ex);
@@ -91,7 +85,7 @@ public class AppBolsa {
         String message    = quant + "; " + val;
         
         try {
-            queueSender.publish(operacao1.getShareName(), routingKey, message.getBytes());
+            queueSender.publish(routingKey, message.getBytes());
         } catch (QueueMessageSendingException e) {
             System.err.println("Houve um erro ao enviar a mensagem: " + e.getMessage());
         }

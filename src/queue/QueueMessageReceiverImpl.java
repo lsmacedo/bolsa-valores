@@ -17,7 +17,8 @@ public class QueueMessageReceiverImpl implements QueueMessageReceiver {
     private Connection           connection;
     private Channel              channel;
     private String               consumerTag;
-    private List<String>         connectedQueues = new ArrayList<String>();
+    private String               queueName;
+    private static final String  EXCHANGE_NAME   = "operacoes";
 
     @Override
     public void config(String host, QueueMessageCallback callback) throws QueueInitializationException {
@@ -35,37 +36,34 @@ public class QueueMessageReceiverImpl implements QueueMessageReceiver {
     }
 
     @Override
-    public void subscribe(String topicName, String bindingKey) {
+    public void subscribe(String bindingKey) {
         try {
-            channel.exchangeDeclare(topicName, "topic");
-            for (String queueName : connectedQueues) 
-                channel.queueBind(queueName, topicName, bindingKey);
+            channel.exchangeDeclare(EXCHANGE_NAME, "topic");
+            channel.queueBind(queueName, EXCHANGE_NAME, bindingKey);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
     
     @Override
-    public void unsubscribe(String topicName, String bindingKey) {
+    public void unsubscribe(String bindingKey) {
         try {
-            for (String queueName : connectedQueues) 
-                channel.queueUnbind(queueName, topicName, bindingKey);
+            channel.queueUnbind(queueName, EXCHANGE_NAME, bindingKey);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void listen(String queueName) throws QueueInitializationException {
+    public void listen() throws QueueInitializationException {
         try {
-            channel.queueDeclare(queueName, false, false, false, null);
+            queueName = channel.queueDeclare().getQueue();
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
                 byte[] message    = delivery.getBody();
                 String routingKey = delivery.getEnvelope().getRoutingKey();
                 callback.onMessage(routingKey, message);
             };
             consumerTag = channel.basicConsume(queueName, true, deliverCallback, consumerTag -> { });
-            connectedQueues.add(queueName);
             System.out.println("Aguardando mensagens em " + queueName + "...");
         } catch (IOException e) {
             throw new QueueInitializationException(e);
