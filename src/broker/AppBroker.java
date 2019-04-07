@@ -19,13 +19,14 @@ public class AppBroker {
 
     /**
      * @param args
+     * @throws exception.QueueInitializationException
      */
     public static void main(String[] args) throws QueueInitializationException {
         /* Inicializando Receiver */
         QueueMessageReceiver queueReceiver = new QueueMessageReceiverImpl();
         queueReceiver.config(HOST, messageHandler());
         queueReceiver.listen(HOST);
-        queueReceiver.subscribe("petr4", "transacao.*");
+        TOPICS.forEach((topic) -> queueReceiver.subscribe(topic, "transacao.*"));
 
         /* Inicializando Sender */
         QueueMessageSender queueSender = new QueueMessageSenderImpl();
