@@ -16,7 +16,7 @@ O AppBroker fornece um menu de utilização, pelo qual é possível realizar as 
 5- Desinscrever: Fornecendo o nome da ação, a aplicação corrente passará a não mais receber ordens de compra,
                  venda e transações referentes à ação informada.
                  
-Obs: O broker somente receberá transações das ações em que ele foi previamente inscrito.
+Obs: O broker somente receberá mensagens de transação das ações em que ele foi previamente inscrito.
 
 -- APP BOLSA --
 O AppBolsa gerencia as operações realizadas pelos Brokers. Sempre que uma nova operação de compra ou venda
