@@ -4,11 +4,13 @@ import exception.QueueInitializationException;
 import exception.QueueMessageSendingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Operacao;
 import model.OperacaoCompra;
+import model.OperacaoInfo;
 import model.OperacaoVenda;
 import queue.*;
 
@@ -32,6 +34,7 @@ public class AppBolsa {
         queueReceiver.subscribe("compra.*");
         queueReceiver.subscribe("venda.*");
         queueReceiver.subscribe("transacao.*");
+        queueReceiver.subscribe("info.*");
 
         /* Inicializando Sender */
         queueSender = new QueueMessageSenderImpl();
@@ -49,7 +52,7 @@ public class AppBolsa {
                 Operacao operacao, matchingOperation;
                 switch (tipoOperacao) {
                     case "compra":
-                        operacao = (OperacaoCompra) OperacaoCompra.fromByteArray(message);
+                        operacao = OperacaoCompra.fromByteArray(message);
                         operacao.setShareName(routingKey.split("\\.")[1]);
                         operacoes.add(operacao);
                         if (null != (matchingOperation = findMatchingSellOperation(operacao))) {
@@ -57,11 +60,18 @@ public class AppBolsa {
                         }
                         break;
                     case "venda":
-                        operacao = (OperacaoVenda) OperacaoVenda.fromByteArray(message);
+                        operacao = OperacaoVenda.fromByteArray(message);
                         operacoes.add(operacao);
                         operacao.setShareName(routingKey.split("\\.")[1]);
                         if (null != (matchingOperation = findMatchingBuyOperation(operacao))) {
                             execTransaction(operacao, matchingOperation);
+                        }
+                        break;
+                    case "info":
+                        operacao = OperacaoInfo.fromByteArray(message);
+                        String shareName = routingKey.split("\\.")[1];
+                        for (String s : getOperationsByDateAndShareName(operacao.getDataHora(), shareName)) {
+                            queueSender.publish("info." + shareName, s.getBytes());
                         }
                         break;
                 }
@@ -114,6 +124,29 @@ public class AppBolsa {
         }
         
         return operacaoCompra;
+    }
+    
+    private static List<String> getOperationsByDateAndShareName(String dateAsString, String shareName) {
+        String[] dateArray   = dateAsString.split("[\\/ :]");
+        Calendar desiredDate = Calendar.getInstance();
+        List<String> ops     = new ArrayList<>();
+        int day              = Integer.parseInt(dateArray[0]);
+        int month            = Integer.parseInt(dateArray[1]) - 1;
+        int year             = Integer.parseInt(dateArray[2]);
+        int hours            = Integer.parseInt(dateArray[3]);
+        int minutes          = Integer.parseInt(dateArray[4]);
+        int seconds          = 0;
+        desiredDate.set(year, month, day, hours, minutes, seconds);
+        
+        for (Operacao operacao : operacoes) {
+            if (operacao.getDate().compareTo(desiredDate) >= 0 && operacao.getShareName().equals(shareName)) {
+                if (operacao instanceof OperacaoCompra) 
+                    ops.add("Compra - " + shareName + ": " + operacao.toString());
+                else ops.add("Venda - " + shareName + ": " + operacao.toString());
+            }
+        }
+        
+        return ops;
     }
 
 }

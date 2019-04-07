@@ -1,6 +1,7 @@
 package broker;
 
 
+import exception.InvalidDateFormatException;
 import exception.InvalidShareNameException;
 import exception.InvalidValueException;
 import exception.QueueMessageSendingException;
@@ -62,9 +63,9 @@ public class UserInteractionBroker {
                     case "2":
                         showSellMenu();
                         break;
-//                    case "3":
-//                        showInfoMenu();
-//                        break;
+                    case "3":;
+                        showInfoMenu();
+                        break;
                     case "4":
                         showSubscribeMenu();
                         break;
@@ -73,7 +74,7 @@ public class UserInteractionBroker {
                         break;
                 }
                 wait(500);
-            } catch (InvalidShareNameException | InvalidValueException | QueueMessageSendingException e) {
+            } catch (InvalidShareNameException | InvalidValueException | QueueMessageSendingException | InvalidDateFormatException e) {
                 System.err.println(e.getMessage());
             } catch (InterruptedException e) {
                 System.err.println("Erro ao manipular threads.");
@@ -124,6 +125,15 @@ public class UserInteractionBroker {
         this.queueReceiver.unsubscribe("compra." + shareName);
         this.queueReceiver.unsubscribe("venda." + shareName);
         this.queueReceiver.unsubscribe("transacao." + shareName);
+    }
+    
+    private void showInfoMenu() throws InvalidDateFormatException, InvalidShareNameException, QueueMessageSendingException {
+        String shareName = InputController.readLine("Informe a ação:");
+        if (!AppBroker.TOPICS.contains(shareName)) throw new InvalidShareNameException();
+        String date = InputController.readLine("Informe a data (dd/mm/aaaa hh:mm):");
+        if (date.split("[\\/ :]").length != 5) throw new InvalidDateFormatException();
+        
+        this.queueSender.publish("info." + shareName, date.getBytes());
     }
     
 }

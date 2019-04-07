@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Calendar;
+
 public abstract class Operacao {
     
     protected int    quant;
@@ -7,11 +9,13 @@ public abstract class Operacao {
     protected String broker;
     protected String dataHora;
     protected String shareName;
+    protected Calendar date;
     
     public Operacao(int quant, float value, String broker) {
         this.quant    = quant;
         this.value    = value;
         this.broker   = broker;
+        this.date     = Calendar.getInstance();
     }
     
     public Operacao(String dataHora) {
@@ -34,6 +38,10 @@ public abstract class Operacao {
         return dataHora;
     }
 
+    public Calendar getDate() {
+        return date;
+    }
+    
     public String getShareName() {
         return shareName;
     }

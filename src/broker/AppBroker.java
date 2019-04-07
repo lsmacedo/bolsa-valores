@@ -26,6 +26,7 @@ public class AppBroker {
         QueueMessageReceiver queueReceiver = new QueueMessageReceiverImpl();
         queueReceiver.config(HOST, messageHandler());
         queueReceiver.listen();
+        queueReceiver.subscribe("info.*");
         
         /* Inicializando Sender */
         QueueMessageSender queueSender = new QueueMessageSenderImpl();
@@ -60,6 +61,8 @@ public class AppBroker {
                         break;
                     case "transacao":
                         System.out.println("Transação Realizada: " + new String(message));
+                    case "info":
+                        System.out.println("Informação Recebida: " + new String(message));
                     default:
                         operation = null;
                         break;

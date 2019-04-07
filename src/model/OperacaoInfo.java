@@ -11,4 +11,10 @@ public class OperacaoInfo extends Operacao {
         return dataHora;
     }
     
+    public static OperacaoInfo fromByteArray(byte[] byteArray) throws Exception {
+        String s = new String(byteArray, "UTF-8");
+        
+        return new OperacaoInfo(s);
+    }
+    
 }
