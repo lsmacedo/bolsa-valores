@@ -24,7 +24,7 @@ public interface QueueMessageReceiver {
      * Cancela interesse de receiver em um tópico
      * @param topicName 
      */
-    public void unsubscribe(String topicName);
+    public void unsubscribe(String topicName, String bindingKey);
 	
     /**
      * Faz com que este receiver comece a ouvir na fila informada

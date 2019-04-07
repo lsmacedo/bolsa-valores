@@ -121,7 +121,9 @@ public class UserInteractionBroker {
         String shareName = InputController.readLine("Informe uma ação para se desinscrever:");
         if (!AppBroker.TOPICS.contains(shareName)) throw new InvalidShareNameException();
         
-        this.queueReceiver.unsubscribe(shareName);
+        this.queueReceiver.unsubscribe(shareName, "compra.*");
+        this.queueReceiver.unsubscribe(shareName, "venda.*");
+        this.queueReceiver.unsubscribe(shareName, "transacao.*");
     }
     
 }

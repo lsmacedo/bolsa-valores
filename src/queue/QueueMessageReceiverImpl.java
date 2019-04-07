@@ -46,10 +46,10 @@ public class QueueMessageReceiverImpl implements QueueMessageReceiver {
     }
     
     @Override
-    public void unsubscribe(String topicName) {
+    public void unsubscribe(String topicName, String bindingKey) {
         try {
             for (String queueName : connectedQueues) 
-                channel.queueUnbind(queueName, topicName, "");
+                channel.queueUnbind(queueName, topicName, bindingKey);
         } catch (IOException e) {
             e.printStackTrace();
         }

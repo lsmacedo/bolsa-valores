@@ -1,11 +1,11 @@
 package broker;
 
-import exception.InvalidShareNameException;
 import exception.QueueInitializationException;
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
 import model.Operacao;
+import model.OperacaoCompra;
+import model.OperacaoVenda;
 import queue.*;
 
 public class AppBroker {
@@ -24,7 +24,8 @@ public class AppBroker {
         /* Inicializando Receiver */
         QueueMessageReceiver queueReceiver = new QueueMessageReceiverImpl();
         queueReceiver.config(HOST, messageHandler());
-        queueReceiver.listen(BROKER);
+        queueReceiver.listen(HOST);
+        queueReceiver.subscribe("petr4", "transacao.*");
 
         /* Inicializando Sender */
         QueueMessageSender queueSender = new QueueMessageSenderImpl();
@@ -47,14 +48,32 @@ public class AppBroker {
      */
     private static QueueMessageCallback messageHandler() {
         return (String routingKey, byte[] message) -> {
-            Operacao operation = Operacao.fromByteArray(message);
-            if (operation != null) {
-                System.out.println(
-                    "\n---------------\n"
-                    + "Operação recebida em " + routingKey + ": " + operation.toString()
-                    + "\n---------------\n"
-                );
-                UserInteractionBroker bolsaValores = UserInteractionBroker.getInstance();
+            try {
+                String tipoOperacao = routingKey.split("\\.")[0];
+                Operacao operation;
+                switch (tipoOperacao) {
+                    case "compra":
+                        operation = OperacaoCompra.fromByteArray(message);
+                        break;
+                    case "venda":
+                        operation = OperacaoVenda.fromByteArray(message);
+                        break;
+                    case "transacao":
+                        System.out.println("Transação Realizada: " + new String(message));
+                    default:
+                        operation = null;
+                        break;
+                }
+                if (operation != null) {
+                    System.out.println(
+                        "\n---------------\n"
+                        + "Operação recebida em " + routingKey + ": " + operation.toString()
+                        + "\n---------------\n"
+                    );
+                    UserInteractionBroker bolsaValores = UserInteractionBroker.getInstance();
+                }
+            } catch (Exception e) {
+                System.err.println("Chegou uma mensagem com formato inválido");
             }
         };
     }
