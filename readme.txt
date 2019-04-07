@@ -2,24 +2,26 @@
 
 Grupo: Lucas Macedo e Pedro Almeida
 
-Para testar a aplicação, executar os arquivos AppBolsa.cmd e AppBroker.cmd que se encontram nesta pasta.
+Para testar a aplicaÃ§Ã£o, executar os arquivos AppBolsa.cmd e AppBroker.cmd que se encontram nesta pasta.
 
 -- APP BROKER --
-O AppBroker fornece um menu de utilização, pelo qual é possível realizar as seguintes operações:
+O AppBroker fornece um menu de utilizaÃ§Ã£o, pelo qual Ã© possÃ­vel realizar as seguintes operaÃ§Ãµes:
 
-1- Comprar:      Fornecendo o nome da ação, quantidade e o valor desejados, será realizada uma ordem de compra.
-2- Vender:       Fornecendo o nome da ação, quantidade e o valor desejados, será realizada uma ordem de venda.
-3- Informações:  Fornecendo o nome da ação e uma data, serão listadas para o cliente todas as operações
-                 desta ação realizadas a partir da data informada.
-4- Inscrever:    Fornecendo o nome da ação, a aplicação corrente passará a receber todas as ordens de compra, 
-                 venda e transações referentes à ação informada.
-5- Desinscrever: Fornecendo o nome da ação, a aplicação corrente passará a não mais receber ordens de compra,
-                 venda e transações referentes à ação informada.
+1- Comprar:      Fornecendo o nome da aÃ§Ã£o, quantidade e o valor desejados, serÃ¡ realizada uma ordem de compra.
+2- Vender:       Fornecendo o nome da aÃ§Ã£o, quantidade e o valor desejados, serÃ¡ realizada uma ordem de venda.
+3- InformaÃ§Ãµes:  Fornecendo o nome da aÃ§Ã£o e uma data, serÃ£o listadas para o cliente todas as operaÃ§Ãµes
+                 desta aÃ§Ã£o realizadas a partir da data informada.
+4- Inscrever:    Fornecendo o nome da aÃ§Ã£o, a aplicaÃ§Ã£o corrente passarÃ¡ a receber todas as ordens de compra, 
+                 venda e transaÃ§Ãµes referentes Ã  aÃ§Ã£o informada.
+5- Desinscrever: Fornecendo o nome da aÃ§Ã£o, a aplicaÃ§Ã£o corrente passarÃ¡ a nÃ£o mais receber ordens de compra,
+                 venda e transaÃ§Ãµes referentes Ã  aÃ§Ã£o informada.
+                 
+Obs: O broker somente receberÃ¡ transaÃ§Ãµes das aÃ§Ãµes em que ele foi previamente inscrito.
 
 -- APP BOLSA --
-O AppBolsa gerencia as operações realizadas pelos Brokers. Sempre que uma nova operação de compra ou venda
-é realizada por algum broker, ela será armazenada em uma lista no AppBolsa.
-Quando há alguma operação de compra que bate com uma de venda, o AppBolsa realizará a transação, notificará
-os brokers a atualizará ou removerá as operações da lista.
-Quando algum broker realizar uma solicitação de informações, ela enviará uma mensagem com as operações de 
+O AppBolsa gerencia as operaÃ§Ãµes realizadas pelos Brokers. Sempre que uma nova operaÃ§Ã£o de compra ou venda
+Ã© realizada por algum broker, ela serÃ¡ armazenada em uma lista no AppBolsa.
+Quando hÃ¡ alguma operaÃ§Ã£o de compra que bate com uma de venda, o AppBolsa realizarÃ¡ a transaÃ§Ã£o, notificarÃ¡
+os brokers a atualizarÃ¡ ou removerÃ¡ as operaÃ§Ãµes da lista.
+Quando algum broker realizar uma solicitaÃ§Ã£o de informaÃ§Ãµes, ela enviarÃ¡ uma mensagem com as operaÃ§Ãµes de 
 compra e venda realizadas a partir da data desejada.
