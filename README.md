@@ -25,7 +25,7 @@ O AppBroker fornece um menu de utilização, pelo qual é possível realizar as 
    passará a não mais receber ordens de compra, venda e transações
    referentes à ação informada.
    
-Obs: O broker somente receberá transações das ações em que ele foi previamente inscrito.
+Obs: O broker somente receberá mensagens de transação das ações em que ele foi previamente inscrito.
 
 ## AppBolsa
 O AppBolsa gerencia as operações realizadas pelos Brokers. 
